@@ -1,0 +1,36 @@
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String  @id @default(uuid())
+  fullname  String  
+  username  String
+  email     String
+  provider  Provider
+  role      String
+  // follower  Follower[]
+  // following
+  // interest
+
+ }
+
+//  model Follower {
+
+//  }
+
+ enum Provider {
+  Google
+  Github
+ }
+
+//  enum Interest {
+
+//  }
