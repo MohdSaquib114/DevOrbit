@@ -14,23 +14,100 @@ model User {
   fullname  String  
   username  String
   email     String
-  provider  Provider
-  role      String
-  // follower  Follower[]
-  // following
-  // interest
+  role      Role
+  interestArea AreaOfInterest
+  post      Post[]
+  profileUrl String?
+  backgroundUrl String?
+  bio            String?
+  links         Link[]
+  notification  Notification[]
+    createdAt   DateTime @default(now())
+
+  followers Follows[] @relation("UserFollowers")
+  following Follows[] @relation("UserFollowing")
+
+
+ 
 
  }
 
-//  model Follower {
-
-//  }
-
- enum Provider {
-  Google
-  Github
+ model Link {
+  id String @id @default(uuid())
+  userId String
+  gitLink String?
+  LinkedINLink String?
+  Other    String?
+  user User @relation(fields: [userId],references: [id])
  }
 
-//  enum Interest {
+ model Post {
+  id     String @id @default(uuid())
+  userId String
+  likes  Like[]
+  comments Comment[]
+  content  String
+  url      String?
+  imageUrl String?
+    createdAt   DateTime @default(now())
+  user   User @relation(fields: [userId], references: [id])
 
-//  }
+ }
+
+ model Notification {
+  id String @id @default(uuid())
+  userId String
+  type   Type
+  user   User @relation(fields: [userId], references: [id])
+
+ }
+ enum Type {
+  comment
+  like
+  added
+  views
+  
+ }
+
+ model Like {
+  id String @id @default(uuid())
+  userId String
+  postId String
+  post Post @relation(fields: [postId], references: [id])
+ }
+
+ model Comment {
+ id String @id @default(uuid())
+ userId String
+  postId String
+  post Post @relation(fields: [postId], references: [id])
+ }
+
+ model Follows {
+  id String @id @default(uuid())
+  followerId String
+  followingId String
+  isMutual Boolean
+    createdAt   DateTime @default(now())
+     follower  User @relation("UserFollowers", fields: [followerId], references: [id])
+  following User @relation("UserFollowing", fields: [followingId], references: [id])
+  
+ }
+
+ enum Role {
+  Developer
+  Founder
+  Organization
+  Explorer
+ }
+
+ enum AreaOfInterest {
+  ArtificialIntelligence
+  WebDevelopment
+  AndroidDevelopment
+  MachineLearning
+  DevOps
+  DataScience
+ 
+
+ }
